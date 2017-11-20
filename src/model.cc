@@ -52,7 +52,7 @@ real Model::binaryLogistic(int32_t target, bool label, real lr) {
   real score = sigmoid(wo_->dotRow(hidden_, target));
   real alpha = lr * (real(label) - score);
   grad_.addRow(*wo_, target, alpha);
-  wo_->addRow(hidden_, target, alpha);
+  wo_->at(target,target) += alpha * hidden_[target];
   if (label) {
     return -log(score);
   } else {
@@ -223,7 +223,7 @@ void Model::update(const std::vector<int32_t>& input, int32_t target, real lr) {
     grad_.mul(1.0 / input.size());
   }
   for (auto it = input.cbegin(); it != input.cend(); ++it) {
-    wi_->addRow(grad_, *it, 1.0);
+    wi_->at(target, target) += grad_[target];
   }
 }
 

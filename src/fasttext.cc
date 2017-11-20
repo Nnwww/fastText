@@ -610,6 +610,8 @@ void FastText::train(std::shared_ptr<Args> args) {
   }
   dict_->readFromFile(ifs);
   ifs.close();
+  std::cout << "vocabulary: " << dict_->nwords() << std::endl;
+  args_->dim = dict_->nwords();
 
   if (args_->pretrainedVectors.size() != 0) {
     loadVectors(args_->pretrainedVectors);
@@ -619,9 +621,9 @@ void FastText::train(std::shared_ptr<Args> args) {
   }
 
   if (args_->model == model_name::sup) {
-    output_ = std::make_shared<Matrix>(dict_->nlabels(), args_->dim);
+    output_ = std::make_shared<Matrix>(dict_->nlabels(), args->dim);
   } else {
-    output_ = std::make_shared<Matrix>(dict_->nwords(), args_->dim);
+    output_ = std::make_shared<Matrix>(dict_->nwords(), args->dim);
   }
   output_->zero();
   startThreads();
